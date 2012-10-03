@@ -43,7 +43,7 @@ if __name__ == "__main__":
    sample_number = _DATA_SIZE / _DATA_SAMPLE
    for i in range(_DATA_SAMPLE):
       sample_sub = data[i*sample_number:(i+1)*sample_number]
-      sample_average = reduce(lambda x,y: x+y, sample_sub, 0) / sample_number
+      sample_average = sum(sample_sub) / sample_number
       sample.append(sample_average)
 
    # Generate the chart
