@@ -19,10 +19,6 @@ from time import time
 import random
 import pygal
 
-# Classes
-#========
-
-
 # Main
 #=====
 
@@ -30,13 +26,13 @@ if __name__ == "__main__":
 
    # Global variable
    _DATA_SIZE = 365 * 24 * 60 * 60
-   _DATA_SAMPLE = 365
+   _DATA_SAMPLE = 51
    _CHART_FILE = 'chart'
 
    # Init the table
    print "Init the data table (size %d)" % _DATA_SIZE
    data = list(xrange(_DATA_SIZE))
-   chart = pygal.Bar()
+   chart = pygal.Line()
 
    print "Let's start..."
    t0 = time()
@@ -52,7 +48,7 @@ if __name__ == "__main__":
 
    # Generate the chart
    print "Add sample data to the chart"
-   chart.add('Others', sample)
+   chart.add('Data', sample)
    
    tf = round(time() - t0, 3)
    print "Time elapsed: %.2f" % tf
