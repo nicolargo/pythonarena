@@ -7,15 +7,13 @@ import sys
 import json
 import zlib
 import sys
+import time
 
 class GlancesClient(LineReceiver):
 
     msg_init = "INIT"
     msg_get  = "GET"
     msg_quit = "QUIT"
-
-    def __init__(self):
-        self.connectionNb = 0
 
     def connectionMade(self):
         self.sendLine(self.msg_init)
@@ -44,26 +42,17 @@ class GlancesClientFactory(ClientFactory):
 
     def clientConnectionLost(self, connector, reason):
         print 'Connection lost:', reason.getErrorMessage()
-        #~ reactor.stop()
-        #~ Or try to reconnect
+        #~ Try to reconnect
         connector.connect()
 
     def clientConnectionFailed(self, connector, reason):
         print 'Connection failed:', reason.getErrorMessage()
         reactor.stop()
-
-
-def GlancesCallback(p):
-    p.sendMessage("Hello")
-    reactor.callLater(3, p.sendMessage, "This is sent in 3 second")
-    reactor.callLater(6, p.sendMessage, "QUIT")
-    reactor.stop()
     
 
 def main():
     host, port = "localhost", 61209
-    factory = GlancesClientFactory()
-    reactor.connectTCP(host, port, factory)    
+    reactor.connectTCP(host, port, GlancesClientFactory())    
     reactor.run()
 
 

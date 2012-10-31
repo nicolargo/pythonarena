@@ -41,7 +41,6 @@ class GlancesServerFactory(ServerFactory):
 def main():
     port = 61209    
     reactor.listenTCP(port, GlancesServerFactory())
-    #~ time.sleep(10)
     reactor.run()
 
 if __name__ == '__main__':
