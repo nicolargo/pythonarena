@@ -6,8 +6,8 @@ import zlib
 import sys
 import time
 
-HOST, PORT = "localhost", 61209
-data = " ".join(sys.argv[1:])
+HOST, PORT = sys.argv[1], 61209
+data = " ".join(sys.argv[2:])
 
 # Create a socket (SOCK_STREAM means a TCP socket)
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
