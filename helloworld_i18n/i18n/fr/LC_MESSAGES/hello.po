@@ -1,0 +1,22 @@
+# French translations for helloworld_i package.
+# Copyright (C) 2012 THE helloworld_i'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the helloworld_i package.
+# nicolargo <nicolas@nicolargo.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: helloworld_i 18n\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-14 14:14+0100\n"
+"PO-Revision-Date: 2012-11-14 14:15+0100\n"
+"Last-Translator: nicolargo <nicolas@nicolargo.com>\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: hello.py:12
+msgid "Hello world !"
+msgstr "Bonjour le monde !"
