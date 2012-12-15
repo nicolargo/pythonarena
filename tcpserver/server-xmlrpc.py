@@ -14,7 +14,7 @@ server = SimpleXMLRPCServer(("localhost", 61209),
 server.register_introspection_functions()
 
 # Register the GET function
-def get():
+def getAll():
     return psutil.cpu_percent(interval=1, percpu=True)
 server.register_function(get, 'get')
 

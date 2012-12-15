@@ -6,7 +6,10 @@ print "============="
 print "Test bad auth"
 print "============="
 
+print "Auth: begin"
 s = xmlrpclib.ServerProxy('http://not:good@localhost:61209')
+print s
+print "Auth: end"
 try:
     print s.get()
 except xmlrpclib.ProtocolError as err:
@@ -20,8 +23,10 @@ print "============="
 print "Test good auth"
 print "============="
 
+print "Auth: begin"
 s = xmlrpclib.ServerProxy('http://bibi:bobo@localhost:61209')
 print s
+print "Auth: end"
 try:
     print s.get()
 except xmlrpclib.ProtocolError as err:
