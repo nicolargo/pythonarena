@@ -27,11 +27,15 @@ class MyItem(object):
         self.ypos = ypos
         self.xsize = xsize
         self.ysize = ysize
+        self.current_line = 0
         self.last_xsize = -1
         self.last_ysize = -1
         self.update()
     
     def update(self):
+        # Put window cursor to the first line
+        self.current_line = 0
+        
         # Get window size
         win_xsize = self.win.getmaxyx()[1]
         win_ysize = self.win.getmaxyx()[0]
@@ -44,35 +48,51 @@ class MyItem(object):
     
             # Set item position
             if (self.pos == "STD"):
-                self.item = self.win.subpad(self.ysize, self.xsize, self.ypos, self.xpos)
+                pass
             elif (self.pos == "LEFT"):
-                self.item = self.win.subpad(self.ysize, self.xsize, self.ypos, 0)
+                self.xpos = 0
             elif (self.pos == "XCENTER"):
-                self.item = self.win.subpad(self.ysize, self.xsize, self.ypos, win_xsize / 2 - self.xsize / 2)
+                self.xpos = win_xsize / 2 - self.xsize / 2
             elif (self.pos == "RIGHT"):
-                self.item = self.win.subpad(self.ysize, self.xsize, self.ypos, win_xsize - self.xsize)
+                self.xpos = win_xsize - self.xsize
             elif (self.pos == "TOP"):
-                self.item = self.win.subpad(self.ysize, self.xsize, 0, self.xpos)
+                self.ypos = 0
             elif (self.pos == "YCENTER"):
-                self.item = self.win.subpad(self.ysize, self.xsize, win_ysize / 2 - self.ysize / 2, self.xpos)
+                self.ypos = win_ysize / 2 - self.ysize / 2
             elif (self.pos == "BOTTOM"):
-                self.item = self.win.subpad(self.ysize, self.xsize, win_ysize - self.ysize, self.xpos)
+                self.ypos = win_ysize - self.ysize
             elif (self.pos == "LEFT_TOP"):
-                self.item = self.win.subpad(self.ysize, self.xsize, 0, 0)
+                self.xpos = 0
+                self.ypos = 0
             elif (self.pos == "LEFT_YCENTER"):
-                self.item = self.win.subpad(self.ysize, self.xsize, win_ysize / 2 - self.ysize / 2, 0)
+                self.xpos = 0
+                self.ypos = win_ysize / 2 - self.ysize / 2
             elif (self.pos == "LEFT_BOTTOM"):
-                self.item = self.win.subpad(self.ysize, self.xsize, win_ysize - self.ysize, 0)
+                self.xpos = 0
+                self.ypos = win_ysize - self.ysize
             elif (self.pos == "RIGHT_TOP"):
-                self.item = self.win.subpad(self.ysize, self.xsize, 0, win_xsize - self.xsize)
+                self.xpos = win_xsize - self.xsize
+                self.ypos = 0
             elif (self.pos == "RIGHT_YCENTER"):
-                self.item = self.win.subpad(self.ysize, self.xsize, win_ysize / 2 - self.ysize / 2, win_xsize - self.xsize)
+                self.xpos = win_xsize - self.xsize
+                self.ypos = win_ysize / 2 - self.ysize / 2
             elif (self.pos == "RIGHT_BOTTOM"):
-                self.item = self.win.subpad(self.ysize, self.xsize, win_ysize - self.ysize, win_xsize - self.xsize)
+                self.xpos = win_xsize - self.xsize
+                self.ypos = win_ysize - self.ysize
+            
+            # Do it...
+            self.item = self.win.subpad(self.ysize, self.xsize, self.ypos, self.xpos)
     
+    def write(self, text):
+        self.win.addnstr(self.ypos+self.current_line, self.xpos, text, len(text))
+        self.current_line += 1
+
     def draw(self):
         self.update()
-        self.item.border()
+#        self.item.border()
+        self.write("Test")
+        self.write("Test2")
+        self.write("Test3")
 
 
 class MyTerm(object):
