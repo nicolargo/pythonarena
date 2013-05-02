@@ -4,9 +4,10 @@ import xmlrpclib
 
 s = xmlrpclib.ServerProxy('http://localhost:61209')
 
-#s = xmlrpclib.ServerProxy('http://192.168.1.14:61209')
-#print s.getAll()
-
+print "getAll"
+print s.getAll()
+print "getAllLimits"
+print s.getAllLimits()
 print "getSystem"
 print s.getSystem()
 print "getCore"
@@ -29,8 +30,8 @@ print "getFs"
 print s.getFs()
 print "getProcessCount"
 print s.getProcessCount()
-#print "getProcessList"
-#print s.getProcessList()
+print "getProcessList"
+print s.getProcessList()
 print "getNow"
 print s.getNow()
 

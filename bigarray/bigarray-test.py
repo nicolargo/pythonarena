@@ -47,12 +47,12 @@ class bigarray:
     Define a big array
     Fct use Numpy http://www.scipy.org/Numpy_Example_List
     """
-    
+
     def __init__(self, s):
         """
         s = size
         """
-        self.array = numpy.random.randint(360, size=(1, s))[0]        
+        self.array = numpy.random.randint(360, size=(1, s))[0]
 
     def val(self, start = 0, end = None):
         '''
@@ -88,13 +88,13 @@ class bigarray:
     def mean(self, start = 0, end = None):
         '''
         Return the mean value of the table or subtable size
-        '''        
+        '''
         return numpy.average(self.array[start:end])
 
     def cumul(self, start = 0, end = None):
         '''
         Return the sum (cumul) value of the table or subtable size
-        '''        
+        '''
         return self.array[start:end].sum()
 
     def integ(self, start = 0, end = None):
@@ -102,7 +102,7 @@ class bigarray:
         Return the integrate table of the table or subtable size
         '''
         # Integrate using the composite trapezoidal rule
-        # return integrate.trapz(self.array[start:end]) 
+        # return integrate.trapz(self.array[start:end])
         # Alternative mode precise but slower: Integrate using the composite Simpsons rule
         # return integrate.simps(self.array[start:end])
         # Cumulative integration using the composite trapezoidal rule
@@ -113,7 +113,7 @@ class bigarray:
         Return the differencial table of the table or subtable size
         '''
         # Return the gradient of the array.
-        # The gradient is computed using central differences in the interior 
+        # The gradient is computed using central differences in the interior
         # and first differences at the boundaries.
         return numpy.gradient(self.array[start:end])
 
@@ -130,16 +130,16 @@ def bench_mean():
     ba.mean()
 
 def bench_cumul():
-    ba.cumul()    
+    ba.cumul()
 
 def bench_smooth():
-    ba.smooth()        
-    
+    ba.smooth()
+
 def bench_integ():
-    ba.integ()        
+    ba.integ()
 
 def bench_diff():
-    ba.diff()        
+    ba.diff()
 
 
 # Main
@@ -148,31 +148,31 @@ def bench_diff():
 if __name__ == "__main__":
     # Init environment
     nbday = 365
-    nbtm = 50    
+    nbtm = 50
     tobebench = ["min", "max", "mean", "cumul", "smooth", "integ", "diff" ]
     #~ tobebench = ["min", "max", "mean", "cumul" ]
-            
+
     # Init the table
-    ba = bigarray(nbday * 24 * 3600)   
-    
-    
+    ba = bigarray(nbday * 24 * 3600)
+
+
     # Start the bench
-    print "%d TM / %d days\n" % (nbtm, nbday)    
-    print "Serial computation..." 
-    t0 = time()     
-    for b in tobebench: 
+    print "%d TM / %d days\n" % (nbtm, nbday)
+    print "Serial computation..."
+    t0 = time()
+    for b in tobebench:
         print "%8s process" % b,
         sys.stdout.flush()
         setup = "from __main__ import bench_%s" % b
         process = "bench_%s()" % b
         t = timeit.Timer(process, setup)
-        print "\rResult: %.2f seconds" % t.timeit(nbtm)        
-    ts = round(time() - t0, 3) 
+        print "\rResult: %.2f seconds" % t.timeit(nbtm)
+    ts = round(time() - t0, 3)
     print "Time elapsed in serial computation: %.2f\n" % ts
 
     # Multiprocessing
     print "Multiprocessing computation on a %d-core..." % nbcore
-    t0 = time()     
+    t0 = time()
     pool = multiprocessing.Pool(processes = nbcore)
     for i in range(nbtm):
         for p in tobebench:
@@ -180,12 +180,12 @@ if __name__ == "__main__":
             pool.apply_async(function)
     pool.close()
     pool.join()
-    tp = round(time() - t0, 3) 
+    tp = round(time() - t0, 3)
     print "Time elapsed in multiprocessing computation: %.2f\n" % tp
 
     # Compare
-    print "Speed-up: %sx \n" % round(ts/tp, 2) 
-    
+    print "Speed-up: %sx \n" % round(ts/tp, 2)
+
     # Exit
     sys.exit(0)
 

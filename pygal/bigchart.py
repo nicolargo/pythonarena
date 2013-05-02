@@ -32,7 +32,7 @@ if __name__ == "__main__":
    # Init the table
    print "Init the data table (size %d)" % _DATA_SIZE
    data = list(xrange(_DATA_SIZE))
-   chart = pygal.Line(title = "Test of the Pygal API")
+   chart = pygal.Bar(title = "Test of the Pygal API", show_dots = False)
 
    print "Let's start..."
    t0 = time()
