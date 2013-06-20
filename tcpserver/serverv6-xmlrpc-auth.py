@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 
 from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
-from base64 import b64decode
-import SocketServer
 import socket
+from base64 import b64decode
 import psutil
-
-host = "::0"
-port = 61209
 
 # The GET function
 
@@ -22,7 +18,6 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
 
     def authenticate(self, headers):
-        headers.get('Authorization')
         try:
             (basic, _, encoded) = headers.get('Authorization').partition(' ')
         except:
@@ -62,35 +57,27 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
         return False
 
 
-class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
-                                 SimpleXMLRPCServer):
+class MyServer(SimpleXMLRPCServer):
+    address_family = socket.AF_INET6
 
-    def __init__(self, bind_addrport):
+    def __init__(self, bind_addressport, RequestHandler):
         # Create server
-        self.server = SimpleXMLRPCServer(bind_addrport,
+        self.server = SimpleXMLRPCServer(bind_addressport,
                                          requestHandler=RequestHandler)
-        self.server.register_introspection_functions()
+
+    def server_bind(self):
+        # self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, False)
+        SimpleXMLRPCServer.server_bind(self)
+
+    def register(self):
         self.server.register_function(get, 'get')
 
     def serve_forever(self):
         self.server.serve_forever()
 
-    def server_close(self):
-        self.server.server_close()
-
-    def server_bind(self):
-        self.socket.setsockopt(socket.SOL_SOCKET,
-                               socket.SO_REUSEADDR, 1)
-        SimpleXMLRPCServer.server_bind(self)
-
-
-class MyServer(SimpleThreadedXMLRPCServer):
-
-    address_family = socket.AF_INET6
-
 
 if __name__ == "__main__":
-    if socket.has_ipv6:
-        print("IPv6 Socket supported on your system")
-    server = MyServer((host, port))
+    server = MyServer(('', 61209), RequestHandler)
+    server.register()
     server.serve_forever()
