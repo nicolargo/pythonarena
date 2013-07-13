@@ -7,20 +7,17 @@
 # Result on my Ubuntu Linux machine
 # Core i5 / 8 Go RAM
 #
-# 50 TM / 360 days
-#     min process 	Result: 1.54 seconds
-#     max process 	Result: 1.55 seconds
-#    mean process 	Result: 2.88 seconds
-#   cumul process 	Result: 1.00 seconds
-#   smooth process 	Result: 144.07 seconds
-#   integ process 	Result: 26.44 seconds
-#    diff process 	Result: 32.92 seconds
-#
+# Create the big table: 11059200 entries
+# Serial computation...
+# Time elapsed in serial computation: 73.63
+# Multiprocessing computation on a 4-core...
+# Time elapsed in multiprocessing computation: 37.19
+# Speed-up: 1.98x 
 
 from __future__ import generators
 
 __appname__ = 'bigarray-test'
-__version__ = "0.2"
+__version__ = "0.3"
 __author__ = "Nicolas Hennion <nicolas@nicolargo.com>"
 __licence__ = "LGPL"
 
@@ -147,26 +144,29 @@ def bench_diff():
 
 if __name__ == "__main__":
     # Init environment
-    nbday = 365
-    nbtm = 50
+    nbday = 1
+    nbpac = 4 # packets / sec
+    nbtm = 10 # TM per packets
     tobebench = ["min", "max", "mean", "cumul", "smooth", "integ", "diff" ]
     #~ tobebench = ["min", "max", "mean", "cumul" ]
 
-    # Init the table
-    ba = bigarray(nbday * 24 * 3600)
-
-
     # Start the bench
-    print "%d TM / %d days\n" % (nbtm, nbday)
+    print "%d TM / %d days\n" % (nbpac * nbtm * 3600 * 24, nbday)
+
+    # Init the table
+    print "Create the big table: %s entries\n" % (nbpac * nbtm * 3600 * 24 * nbday)
+    ba = bigarray(nbday * (nbpac * nbtm * 3600 * 24))
+
     print "Serial computation..."
     t0 = time()
     for b in tobebench:
-        print "%8s process" % b,
-        sys.stdout.flush()
+        # print "%8s process" % b,
+        # sys.stdout.flush()
         setup = "from __main__ import bench_%s" % b
         process = "bench_%s()" % b
         t = timeit.Timer(process, setup)
-        print "\rResult: %.2f seconds" % t.timeit(nbtm)
+        t.timeit(nbtm)
+        # print "\rResult: %.2f seconds" % t.timeit(nbtm)
     ts = round(time() - t0, 3)
     print "Time elapsed in serial computation: %.2f\n" % ts
 
