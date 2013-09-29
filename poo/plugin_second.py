@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-from metaplugin import Plugin
+from metaplugin import BasePlugin
 
-class MySecondPlugin(Plugin):
+class SecondPlugin(BasePlugin):
     """ My test plugin """
-    pass
+
+    def test(self):
+        return "test"
