@@ -12,7 +12,7 @@
 # Time elapsed in serial computation: 73.63
 # Multiprocessing computation on a 4-core...
 # Time elapsed in multiprocessing computation: 37.19
-# Speed-up: 1.98x 
+# Speed-up: 1.98x
 
 from __future__ import generators
 
