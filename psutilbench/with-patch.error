@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/runpy.py", line 162, in _run_module_as_main
+    "__main__", fname, loader, pkg_name)
+  File "/usr/lib/python2.7/runpy.py", line 72, in _run_code
+    exec code in run_globals
+  File "/usr/lib/python2.7/cProfile.py", line 199, in <module>
+    main()
+  File "/usr/lib/python2.7/cProfile.py", line 192, in main
+    runctx(code, globs, None, options.outfile, options.sort)
+  File "/usr/lib/python2.7/cProfile.py", line 49, in runctx
+    prof = prof.runctx(statement, globals, locals)
+  File "/usr/lib/python2.7/cProfile.py", line 140, in runctx
+    exec cmd in globals, locals
+  File "./psutilbench.py", line 38, in <module>
+    main()
+  File "./psutilbench.py", line 34, in main
+    cpu = proc.get_cpu_percent(interval=None)
+  File "/home/nicolargo/virtualenvs/glances-2.0/local/lib/python2.7/site-packages/psutil/_common.py", line 144, in inner
+    return getattr(self, replacement)(*args, **kwargs)
+  File "/home/nicolargo/virtualenvs/glances-2.0/local/lib/python2.7/site-packages/psutil/__init__.py", line 847, in cpu_percent
+    pt2 = self._proc.cpu_times()
+  File "/home/nicolargo/virtualenvs/glances-2.0/local/lib/python2.7/site-packages/psutil/_pslinux.py", line 492, in wrapper
+    raise NoSuchProcess(self.pid, self._name)
+psutil.NoSuchProcess: process no longer exists (pid=14119)
+
