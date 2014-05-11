@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__appname__ = 'snmpclient'
+__appname__ = 'snmpget'
 __version__ = "0.1"
 __author__ = "Nicolas Hennion <nicolas@nicolargo.com>"
 __licence__ = "LGPL"
@@ -42,7 +42,8 @@ class snmpclient(object):
 
 
 if __name__ == "__main__":
-    c = snmpclient()
+    c = snmpclient(host="demo.snmplabs.com")
     print c.get_by_oid("1.3.6.1.2.1.1.5.0", # Sysname 
-                       "1.3.6.1.2.1.1.1.0"  # Uname
+                       "1.3.6.1.2.1.1.1.0",  # Uname
+                       "1.3.6.1.2.1.2.2.1.2.1" # Net interface #1
                        )
