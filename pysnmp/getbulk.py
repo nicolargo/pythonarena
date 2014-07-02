@@ -39,6 +39,12 @@ class snmpclient(object):
         return ret
 
     def getbulk_by_oid(self, non_repeaters, max_repetitions, *oid):
+        """
+        SNMP getbulk request
+        non_repeaters: This specifies the number of supplied variables that should not be iterated over. 
+        max_repetitions: This specifies the maximum number of iterations over the repeating variables. 
+        oid: oid list
+        """
         errorIndication, errorStatus, errorIndex, varBindTable = self.cmdGen.bulkCmd(
             cmdgen.CommunityData(self.community),
             cmdgen.UdpTransportTarget((self.host, self.port)),
@@ -50,8 +56,11 @@ class snmpclient(object):
 
 
 if __name__ == "__main__":
-    c = snmpclient(host='demo.snmplabs.com')
-    print c.getbulk_by_oid(0, 25, 
-                           '1.3.6.1.2.1.2.2.1.2', 
-                           '1.3.6.1.2.1.2.2.1.10',
-                           '1.3.6.1.2.1.2.2.1.16')
+    c = snmpclient(host='192.168.0.15')
+    print c.getbulk_by_oid(0, 10, 
+                           '1.3.6.1.2.1.25.3.3.1.2') # Running processes
+    # c = snmpclient(host='localhost')
+    # print c.getbulk_by_oid(0, 25, 
+    #                        '1.3.6.1.2.1.25.4.2') # Running processes
+    # print c.getbulk_by_oid(0, 25, 
+    #                        '1.3.6.1.2.1.25.5') # Processes perf
