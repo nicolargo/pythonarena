@@ -3,7 +3,7 @@
 
 from collections import namedtuple
 
-nbiter = 10000
+nbiter = 20000
 
 def main():    
     f = open('/proc/stat', 'r')
