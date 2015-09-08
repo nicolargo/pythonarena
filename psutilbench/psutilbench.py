@@ -29,10 +29,10 @@ import psutil
 nbiter = 500
 
 def main():
-    for i in range(1, nbiter):
-        for proc in psutil.process_iter():
-            cpu = proc.get_cpu_percent(interval=None)
-            mem = proc.get_ext_memory_info().rss
+    for proc in psutil.process_iter():
+        cpu = proc.get_cpu_percent(interval=None)
+        mem = proc.get_ext_memory_info().rss
 
 if __name__ == '__main__':
-    main()
+    for i in range(1, nbiter):
+        main()

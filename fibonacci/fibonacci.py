@@ -25,8 +25,8 @@ class fibonnacci(object):
 
 def main():
     f = fibonnacci()
-    for i in range(2, 800):
-        print("%s" % f.compute(i))
+    for i in range(2, 64000):
+        f.compute(i)
 
 
 if __name__ == '__main__':
