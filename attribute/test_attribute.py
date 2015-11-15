@@ -38,8 +38,10 @@ class TestAttribute(unittest.TestCase):
         self.assertEqual(a.value, 3)
         self.assertEqual(a.history, [1, 2])
 
+        self.assertEqual(a.history_mean(3), 1.0)
+
     def test_001_withmaxsize(self):
-        a = Attribute('stat3', 5)
+        a = Attribute('stat3', history_max_size=5)
         self.assertEqual(a.name, 'stat3')
 
         for i in xrange(0, 8):
@@ -64,6 +66,8 @@ class TestAttribute(unittest.TestCase):
         self.assertAlmostEqual(a.value, 2, places=2)
         a.value = 5
         self.assertAlmostEqual(a.value, 0.5, places=2)
+
+        self.assertAlmostEqual(a.history_mean(3), 6.0, places=1)
 
 
 if __name__ == '__main__':

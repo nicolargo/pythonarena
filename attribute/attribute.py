@@ -16,7 +16,7 @@ class Attribute(object):
         is_rate: If True then the value is manage like a rate (store timestamp in the history)
         """
         self._name = name
-        self._name = description
+        self._description = description
         self._value = None
         self._history_max_size = history_max_size
         self._history = []
@@ -38,6 +38,17 @@ class Attribute(object):
     @name.setter
     def name(self, new_name):
         self._name = new_name
+
+    """
+    Properties for the attribute description
+    """
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, new_description):
+        self._description = new_description
 
     """
     Properties for the attribute value
@@ -101,4 +112,13 @@ class Attribute(object):
         """Return the value in position pos in the history.
         Default is to return the latest value added to the history.
         """
-        return self._history[-pos:][0]
+        return self._history[-pos]
+
+    def history_mean(self, nb=5):
+        """Return the mean on the <nb> values in the history.
+        """
+        if self.is_rate:
+            h_sum = map(sum, zip(*self._history[-nb:]))
+            return h_sum[1] / float(self._history[-1][0] - self._history[-nb][0])
+        else:
+            return sum(self._history[-nb:]) / float(nb)
