@@ -1,27 +1,21 @@
-# Bench of the ProcFS lib
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Procfs bench
 # https://github.com/pmuller/procfs
 #
 # Nicolargo (2015)
 # MIT Licence
 
-
 from procfs import Proc
-import time
 
-proc = Proc()
+nbiter = 500
 
-while True:
+def main():
+    proc = Proc()
     for p in proc.processes:
-        try:
-            p.io
-        except Exception as e:
-            print "ERROR: %s" % e
-        try:
-            p.cmdline
-            p.status
-            p.stat
-            p.statm
-            p.smaps
-        except Exception as e:
-            print "ERROR: %s" % e
-    time.sleep(3)
+        mem = p.status
+
+if __name__ == '__main__':
+    for i in range(1, nbiter):
+        main()

@@ -9,10 +9,10 @@ import os
 # use the scandir module version
 try:
     # For Python 3.5 or higher
-    from os import scandir, walk
+    from os import scandir
 except ImportError:
     # For others...
-    from scandir import scandir, walk
+    from scandir import scandir
 
 def folder_size(path='.'):
     """Return the size of the directory given by path
