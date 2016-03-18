@@ -9,26 +9,49 @@ import socket
 
 class PortScanner(asyncore.dispatcher):
 
-    def __init__(self, host, port):
+    def __init__(self, host, port=80):
+        """
+        """
+        self.connected = None
         self.host = host
         self.port = port
 
         asyncore.dispatcher.__init__(self)
+
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+
         try:
             self.connect((host, port))
         except Exception as e:
-            print 'Connection error for %s:%s (%s)' % (self.host, self.port, e)
+            print('Connection error for %s:%s (%s)' % (self.host, self.port, e))
+            self.connected = False
             self.close()
 
     def handle_connect(self):
-        print 'Connected to %s:%s' % (self.host, self.port)
+        print('Connected to %s:%s' % (self.host, self.port))
+        self.scan = True
         self.close()
 
-scanlist = []
-scanlist.append(PortScanner('www.google.fr', 443))
-scanlist.append(PortScanner('www.inria.fr', 80))
-scanlist.append(PortScanner('www.inria.fr', 1024))
-scanlist.append(PortScanner('www.nonXXXexistingXXX.com', 80))
+    def handle_error(self):
+        print('Connection error for %s:%s' % (self.host, self.port))
+        self.connected = False
+        self.close()
 
+
+# Build the async list
+scanlist = []
+scanlist.append(PortScanner('localhost', port=56339))
+scanlist.append(PortScanner('localhost', port=666))
+scanlist.append(PortScanner('www.google.fr', port=443))
+scanlist.append(PortScanner('www.inria.fr', port=80))
+scanlist.append(PortScanner('www.inria.fr', port=1024))
+scanlist.append(PortScanner('www.nonXXXexistingXXX.com', port=80))
+
+# Async loop
 asyncore.loop(timeout=1, count=3)
+
+# Print the result
+print [p.connected for p in scanlist]
+
+# Following command: is it usefull ?
+[p.close() for p in scanlist]
