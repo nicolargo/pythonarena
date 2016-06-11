@@ -6,6 +6,8 @@
 
 import asyncore
 import socket
+import logging
+
 
 class PortScanner(asyncore.dispatcher):
 
@@ -23,17 +25,17 @@ class PortScanner(asyncore.dispatcher):
         try:
             self.connect((host, port))
         except Exception as e:
-            print('Connection error for %s:%s (%s)' % (self.host, self.port, e))
+            logging.debug('Connection error for %s:%s (%s)' % (self.host, self.port, e))
             self.connected = False
             self.close()
 
     def handle_connect(self):
-        print('Connected to %s:%s' % (self.host, self.port))
+        logging.debug('Connected to %s:%s' % (self.host, self.port))
         self.scan = True
         self.close()
 
     def handle_error(self):
-        print('Connection error for %s:%s' % (self.host, self.port))
+        logging.debug('Connection error for %s:%s' % (self.host, self.port))
         self.connected = False
         self.close()
 
@@ -51,7 +53,7 @@ scanlist.append(PortScanner('www.nonXXXexistingXXX.com', port=80))
 asyncore.loop(timeout=1, count=3)
 
 # Print the result
-print [p.connected for p in scanlist]
+assert [p.connected for p in scanlist] == [False, False, True, True, False, False]
 
 # Following command: is it usefull ?
 [p.close() for p in scanlist]
