@@ -10,7 +10,7 @@
 import sys
 import array
 
-class History(object):
+class History(object):    
 
     def __init__(self):
         self._history = array.array('h')
