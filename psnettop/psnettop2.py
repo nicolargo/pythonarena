@@ -53,8 +53,9 @@ class PacketSniffer(threading.Thread):
             if self.receive():
                 packet = {'source_addr': self.ip_source(),
                           'destination_addr': self.ip_destination(),
-                          'source_port': self.tcp_source_port(),
-                          'destination_port': self.tcp_destination_port(),
+                          'source_port': self.proto_source_port(),
+                          'destination_port': self.proto_destination_port(),
+                          'protocol': self.ip_protocol(),
                           'size': self.size()}
                 self._packets_queue.put(packet)
             if self.stopped():
@@ -79,21 +80,28 @@ class PacketSniffer(threading.Thread):
 
     def receive(self):
         """Receive a new packet
-        Return True only if it is a TCP packet"""
+        Return True only if it is a TCP or UDP packet"""
         self._raw = self._socket.recvfrom(65535)[0]
 
-        # Unpack the packet
+        # Unpack the Ethernet packet
         self._ethernet_header = unpack('!6s6sH', self._raw[:14])
         if self.ethernet_protocol() == 8:
-            # IP
+            # Yes, it's an IP packet
             self._ip_header = unpack('!BBHHHBBH4s4s', self._raw[14:34])
             if self.ip_protocol() == 6:
-                # TCP
-                tcp_header_start = 14 + self.ip_header_length() * 4
-                self._tcp_header = unpack('!HHLLBBHHH',
-                                          self._raw[tcp_header_start:tcp_header_start + 20])
-                tcp_data_start = tcp_header_start + self.tcp_header_length() * 4
-                self._tcp_data = self._raw[tcp_data_start:]
+                # ...and inside a TCP packet
+                proto_header_start = 14 + self.ip_header_length() * 4
+                self._proto_header = unpack('!HHLLBBHHH',
+                                            self._raw[proto_header_start:proto_header_start + 20])
+                proto_data_start = proto_header_start + self.proto_header_length() * 4
+                self._proto_data = self._raw[proto_data_start:]
+            elif self.ip_protocol() == 17:
+                # ...and inside an UDP packet
+                proto_header_start = 14 + self.ip_header_length() * 4
+                self._proto_header = unpack('!HHHH',
+                                            self._raw[proto_header_start:proto_header_start + 8])
+                proto_data_start = proto_header_start + self.proto_header_length() * 4
+                self._proto_data = self._raw[proto_data_start:]
             else:
                 return False
         else:
@@ -136,37 +144,45 @@ class PacketSniffer(threading.Thread):
         """Return the IP destination adresse"""
         return socket.inet_ntoa(self.ip_header()[9])
 
-    def tcp_header_length(self):
+    def proto_header_length(self):
         if self.ip_protocol() == 6:
-            ret = self._tcp_header[4] >> 4
+            # TCP
+            ret = self._proto_header[4] >> 4
+        elif self.ip_protocol() == 17:
+            # UDP
+            ret = 8
         else:
             ret = None
         return ret
 
-    def tcp_source_port(self):
-        if self.ip_protocol() == 6:
-            ret = self._tcp_header[0]
+    def proto_source_port(self):
+        if self.ip_protocol() == 6 or self.ip_protocol() == 17:
+            # TCP and UDP
+            ret = self._proto_header[0]
         else:
             ret = None
         return ret
 
-    def tcp_destination_port(self):
-        if self.ip_protocol() == 6:
-            ret = self._tcp_header[1]
+    def proto_destination_port(self):
+        if self.ip_protocol() == 6 or self.ip_protocol() == 17:
+            # TCP and UDP
+            ret = self._proto_header[1]
         else:
             ret = None
         return ret
 
-    def tcp_data(self):
-        if self.ip_protocol() == 6:
-            ret = self._tcp_data
+    def proto_data(self):
+        if self.ip_protocol() == 6 or self.ip_protocol() == 17:
+            # TCP and UDP
+            ret = self._proto_data
         else:
             ret = None
         return ret
 
-    def tcp_data_length(self):
-        if self.ip_protocol() == 6:
-            ret = len(self._tcp_data)
+    def proto_data_length(self):
+        if self.ip_protocol() == 6 or self.ip_protocol() == 17:
+            # TCP and UDP
+            ret = len(self._proto_data)
         else:
             ret = None
         return ret
