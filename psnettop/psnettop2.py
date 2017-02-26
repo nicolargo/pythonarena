@@ -102,6 +102,13 @@ class PacketSniffer(threading.Thread):
                                             self._raw[proto_header_start:proto_header_start + 8])
                 proto_data_start = proto_header_start + self.proto_header_length() * 4
                 self._proto_data = self._raw[proto_data_start:]
+            elif self.ip_protocol() == 1:
+                # ...and inside an ICMP packet
+                proto_header_start = 14 + self.ip_header_length() * 4
+                self._proto_header = unpack('!BBH',
+                                            self._raw[proto_header_start:proto_header_start + 4])
+                proto_data_start = proto_header_start + self.proto_header_length() * 4
+                self._proto_data = self._raw[proto_data_start:]
             else:
                 return False
         else:
@@ -151,6 +158,9 @@ class PacketSniffer(threading.Thread):
         elif self.ip_protocol() == 17:
             # UDP
             ret = 8
+        elif self.ip_protocol() == 1:
+            # ICMP
+            ret = 4
         else:
             ret = None
         return ret
