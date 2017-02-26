@@ -33,7 +33,7 @@ class PacketSniffer(threading.Thread):
         # Event needed to stop properly the thread
         self._stopper = threading.Event()
 
-        #  Packets queue
+        #  Init the packets queue
         self._packets_queue = Queue()
 
         # 1) With socket.ntohs(0x0003), all TCP, UDP, ICMP and ARP trafic are captured
@@ -47,8 +47,8 @@ class PacketSniffer(threading.Thread):
 
     def run(self):
         """Function called to sniff Ethernet packet
+        Push packet information inside the queue
         Infinite loop, should be stopped by calling the stop() method"""
-        print("Start sniffer")
         while True:
             if self.receive():
                 packet = {'source_addr': self.ip_source(),
@@ -63,7 +63,6 @@ class PacketSniffer(threading.Thread):
 
     def stop(self, timeout=None):
         """Stop the thread"""
-        print("Stop sniffer")
         self._stopper.set()
 
     def stopped(self):
@@ -90,27 +89,24 @@ class PacketSniffer(threading.Thread):
             self._ip_header = unpack('!BBHHHBBH4s4s', self._raw[14:34])
             if self.ip_protocol() == 6:
                 # ...and inside a TCP packet
-                proto_header_start = 14 + self.ip_header_length() * 4
-                self._proto_header = unpack('!HHLLBBHHH',
-                                            self._raw[proto_header_start:proto_header_start + 20])
-                proto_data_start = proto_header_start + self.proto_header_length() * 4
-                self._proto_data = self._raw[proto_data_start:]
+                proto_header_size = 20
+                proto_header_pack = '!HHLLBBHHH'
             elif self.ip_protocol() == 17:
                 # ...and inside an UDP packet
-                proto_header_start = 14 + self.ip_header_length() * 4
-                self._proto_header = unpack('!HHHH',
-                                            self._raw[proto_header_start:proto_header_start + 8])
-                proto_data_start = proto_header_start + self.proto_header_length() * 4
-                self._proto_data = self._raw[proto_data_start:]
+                proto_header_size = 8
+                proto_header_pack = '!HHHH'
             elif self.ip_protocol() == 1:
                 # ...and inside an ICMP packet
-                proto_header_start = 14 + self.ip_header_length() * 4
-                self._proto_header = unpack('!BBH',
-                                            self._raw[proto_header_start:proto_header_start + 4])
-                proto_data_start = proto_header_start + self.proto_header_length() * 4
-                self._proto_data = self._raw[proto_data_start:]
+                proto_header_size = 4
+                proto_header_pack = '!BBH'
             else:
+                # Ignore others packets
                 return False
+            proto_header_start = 14 + self.ip_header_length() * 4
+            self._proto_header = unpack(proto_header_pack,
+                                        self._raw[proto_header_start:proto_header_start + proto_header_size])
+            proto_data_start = proto_header_start + self.proto_header_length() * 4
+            self._proto_data = self._raw[proto_data_start:]
         else:
             return False
         return True
@@ -224,13 +220,16 @@ class NetTopStats():
         # Get the processes net stats
         packet = self._sniffer.get()
 
+        # Get the net connection status thanks to the PsUtil lib
+        # This call consumes CPU
         if packet is not None:
-            # Update packet <=> PID
             self._net_connections = psutil.net_connections()
 
         # Empty packets queue
         while packet is not None:
+            # Get the PID of the process which use the packet
             packet_pid = self.pid(packet)
+            # Add the stats to the queue
             if packet_pid is not None:
                 if packet_pid not in self._stats:
                     self._stats[packet_pid] = {'bytes_recv': 0, 'bytes_sent': 0}
