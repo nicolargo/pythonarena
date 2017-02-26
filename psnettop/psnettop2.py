@@ -210,13 +210,24 @@ class NetTopStats():
         self._outgoing = None
 
         # Run the sniffer asynchroniously
-        self._sniffer = PacketSniffer()
-        self._sniffer.start()
+        try:
+            self._sniffer = PacketSniffer()
+        except Exception as e:
+            self._sniffer = None
+        else:
+            self._sniffer.start()
 
     def stop(self):
-        self._sniffer.stop()
+        if self._sniffer is not None:
+            self._sniffer.stop()
+
+    def get(self):
+        return self._stats
 
     def update(self):
+        if self._sniffer is None:
+            return False
+
         # Get the processes net stats
         packet = self._sniffer.get()
 
@@ -239,6 +250,8 @@ class NetTopStats():
                     self._stats[packet_pid]['bytes_sent'] += packet['size']
             # Next packet
             packet = self._sniffer.get()
+
+        return True
 
     def pid(self, packet):
         """Try to find the relative process PID
@@ -296,4 +309,4 @@ if __name__ == '__main__':
         time.sleep(3)
         n.update()
         print('=' * 80)
-        pprint.pprint(n._stats)
+        pprint.pprint(n.get())
