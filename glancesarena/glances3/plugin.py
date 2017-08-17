@@ -76,12 +76,13 @@ class Plugin:
     @lockandrun
     def update(self, item):
         """Simulate an plugin update method."""
-        s = random.uniform(0, 10)
         logging.info('Update processe started')
-        self._stats.append(item)
-        t = Timer(s)
+        # Simulate an update
+        t = Timer(random.uniform(0, 5))
         while not t.finished() and not self.stopped():
             sleep(0.01)
+            self._stats.append(item)
+        # /Simulate an update
         if self.stopped():
             logging.info('Update processes stopped')
         else:

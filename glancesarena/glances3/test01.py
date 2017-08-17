@@ -5,7 +5,6 @@
 # Nicolargo (08/2017)
 
 import signal
-import sys
 import threading
 from plugin import Plugin
 
@@ -28,16 +27,19 @@ class Stats(object):
             self.plugins_list.append(Plugin(name='plugin%s' % (i - 1)))
 
     def update(self):
+        # Init the threads list
         self.plugin_threads = []
         for i in range(0, 9):
             t = threading.Thread(name='plugin%s' % i,
                                  target=self.plugins_list[i].update,
                                  args=(i,))
             self.plugin_threads.append(t)
+            # Start all the threads
             t.start()
+        # Wait all the threads
+        t.join()
 
     def stop(self, signal, frame):
-        print('CTRL-C pressed')
         for i in range(0, 9):
             self.plugins_list[i].stop()
 
