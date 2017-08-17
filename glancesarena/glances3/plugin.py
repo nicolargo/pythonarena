@@ -60,12 +60,12 @@ def logpluginmethod(function):
     """
     @wraps(function)
     def wrapper(self, *args, **kwargs):
-        logging.info('Method started')
+        logging.info('Method %s started' % function.__name__)
         ret = function(self, *args, **kwargs)
         if self.stopped():
-            logging.info('Method stopped')
+            logging.info('Method %s stopped' % function.__name__)
         else:
-            logging.info('Method finished')
+            logging.info('Method %s finished' % function.__name__)
         return ret
     return wrapper
 
