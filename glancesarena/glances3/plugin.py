@@ -53,6 +53,23 @@ def lockandrun(function):
     return wrapper
 
 
+def logpluginmethod(function):
+    """
+    Decorator to log plugin method.
+    Use the self.stopped() method.
+    """
+    @wraps(function)
+    def wrapper(self, *args, **kwargs):
+        logging.info('Method started')
+        ret = function(self, *args, **kwargs)
+        if self.stopped():
+            logging.info('Method stopped')
+        else:
+            logging.info('Method finished')
+        return ret
+    return wrapper
+
+
 class Plugin:
     def __init__(self, name):
         logging.info('Init plugin {}'.format(name))
@@ -74,16 +91,10 @@ class Plugin:
         return self._stopper.isSet()
 
     @lockandrun
+    @logpluginmethod
     def update(self, item):
         """Simulate an plugin update method."""
-        logging.info('Update processe started')
-        # Simulate an update
         t = Timer(random.uniform(0, 5))
         while not t.finished() and not self.stopped():
             sleep(0.01)
             self._stats.append(item)
-        # /Simulate an update
-        if self.stopped():
-            logging.info('Update processes stopped')
-        else:
-            logging.info('Update method done')
