@@ -12,7 +12,7 @@ import random
 
 import logging
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s] (%(threadName)-10s) %(message)s')
 
 
@@ -60,19 +60,20 @@ def logpluginmethod(function):
     """
     @wraps(function)
     def wrapper(self, *args, **kwargs):
-        logging.info('Method %s started' % function.__name__)
+        logging.debug('Method %s started' % function.__name__)
         ret = function(self, *args, **kwargs)
         if self.stopped():
-            logging.info('Method %s stopped' % function.__name__)
+            logging.debug('Method %s stopped' % function.__name__)
         else:
-            logging.info('Method %s finished' % function.__name__)
+            logging.debug('Method %s finished' % function.__name__)
         return ret
     return wrapper
 
 
 class Plugin:
     def __init__(self, name):
-        logging.info('Init plugin {}'.format(name))
+        # logging.debug('>>> {}'.format(self.__class__.__name__))
+        logging.debug('Init plugin {}'.format(name))
         # Event needed to stop properly the thread
         self._stopper = Event()
         # The lock for the current thread
@@ -94,7 +95,7 @@ class Plugin:
     @logpluginmethod
     def update(self, item):
         """Simulate an plugin update method."""
-        t = Timer(random.uniform(0, 5))
+        t = Timer(random.uniform(0, 3))
         while not t.finished() and not self.stopped():
             sleep(0.01)
             self._stats.append(item)
