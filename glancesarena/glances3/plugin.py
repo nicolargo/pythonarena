@@ -92,10 +92,26 @@ class Plugin:
         return self._stopper.isSet()
 
     @lockandrun
+    def get(self):
+        # Is it needed to lock the class when the stats are getted ?
+        return self._stats
+
+    @logpluginmethod
+    def display(self):
+        stats = self.get()
+        # Display stats...
+
+    @lockandrun
     @logpluginmethod
     def update(self, item):
         """Simulate an plugin update method."""
-        t = Timer(random.uniform(0, 3))
+        # t = Timer(random.uniform(0, 3))
+        t = Timer(2)
         while not t.finished() and not self.stopped():
             sleep(0.01)
             self._stats.append(item)
+
+    @logpluginmethod
+    def export(self):
+        stats = self.get()
+        # Export stats...
