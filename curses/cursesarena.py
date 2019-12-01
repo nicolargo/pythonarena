@@ -89,9 +89,9 @@ class MyItem(object):
         self.win.addnstr(self.ypos+self.current_line, self.xpos, text, len(text), style)
         self.current_line += 1
 
-    def draw(self):
+    def draw(self, ch):
         self.update()
-        self.write("OK", curses.A_NORMAL | curses.color_pair(2))
+        self.write("OK: {}".format(ch), curses.A_NORMAL | curses.color_pair(2))
         self.write("CAREFULL", curses.A_NORMAL | curses.color_pair(3))
         self.write("WARNING", curses.A_NORMAL | curses.color_pair(4))
         self.write("CRITICAL", curses.A_NORMAL | curses.color_pair(5))
@@ -136,7 +136,7 @@ class MyTerm(object):
         # Init items
         self.inititems()
         # First draw
-        self.draw()
+        self.draw('INIT')
         # Run the main loop
         self.handle()
 
@@ -161,7 +161,7 @@ class MyTerm(object):
         curses.echo()
         curses.endwin()
 
-    def draw(self):
+    def draw(self, ch):
         '''
         Draw and refresh the screen
         '''
@@ -169,7 +169,7 @@ class MyTerm(object):
         self.screen.erase()
         # Draw all items
         for item in self.items:
-            self.items[item].draw()
+            self.items[item].draw(ch)
         # then refresh the window
         self.win.refresh()
 
@@ -177,11 +177,12 @@ class MyTerm(object):
         '''
         Main loop
         '''
+        self.win.timeout(1000)
         while True:
             ch = self.win.getch()
-            if ch == ord('q'):
+            if ch == ord('q') or ch == 27:
                 break
-            self.draw()
+            self.draw(ch)
 
 def main():
     myterm = MyTerm()
