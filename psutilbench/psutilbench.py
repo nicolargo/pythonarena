@@ -3,20 +3,22 @@
 #
 # PsUtil bench
 #
-# 500 iters with PsUtil version 5.4.3
-# Delta   : 0:00:09.013591 (for cmdline)
-# Delta   : 0:00:06.832873 (for cpu_percent)
-# Delta   : 0:00:00.671494 (for cpu_times)
-# Delta   : 0:00:02.752303 (for memory_info)
-# Delta   : ~0 (for memory_percent)
-# Delta   : 0:00:01.582691 (for name)
-# Delta   : 0:00:00.624670 (for nice)
-# Delta   : 0:00:00.105949 (for pid)
-# Delta   : 0:00:00.570437 (for ppid)
-# Delta   : 0:00:00.264209 (for status)
-# Delta   : 0:00:12.426514 (for username)
-# Delta   : 0:00:00.138800 (for status)
-# Delta   : 0:00:00.374208 (for num_threads)
+
+# 500 iters with PsUtil version 5.8.0
+# Delta   : 0:00:12.783057 (for cmdline)
+# Delta   : 0:00:06.264293 (for cpu_percent)
+# Delta   : 0:00:00.841236 (for cpu_times)
+# Delta   : 0:00:04.244486 (for memory_info)
+# Delta   : 0:00:01.313005 (for memory_percent)
+# Delta   : 0:00:02.632584 (for name)
+# Delta   : -1 day, 23:59:58.992715 (for nice)
+# Delta   : 0:00:00.484527 (for pid)
+# Delta   : 0:00:00.016478 (for ppid)
+# Delta   : 0:00:01.037471 (for status)
+# Delta   : 0:00:10.766456 (for username)
+# Delta   : -1 day, 23:59:59.781488 (for status)
+# Delta   : 0:00:01.277902 (for num_threads)
+
 
 
 import psutil

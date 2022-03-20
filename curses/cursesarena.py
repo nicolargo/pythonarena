@@ -2,6 +2,13 @@
 #
 # Test the curses lib
 #
+# Needed for Glances UI
+# - Add a line
+# - Add a column
+# - Add an item for a line
+# - Add an item to a column
+# - set/get item size
+# - set/get line size
 
 import curses
 import traceback

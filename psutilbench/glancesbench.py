@@ -22,7 +22,7 @@ import psutil
 from glances.processes import GlancesProcesses
 from glances import __version__
 
-nbiter = 10
+nbiter = 500
 attrs_list = ['cmdline', 'cpu_percent', 'cpu_times',
               'io_counters', 'memory_info',
               'memory_percent', 'name', 'nice',
