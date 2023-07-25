@@ -22,7 +22,12 @@ layout.split_column(
 )
 layout["lower"].split_row(
     Layout(p2, name="left"),
-    Layout(p3, name="right"),
+    Layout(name="right"),
+)
+layout["right"].split_column(
+    Layout(p1, name="upper_right"),
+    Layout(p2, name="middle_right"),
+    Layout(p3, name="bottom_right")
 )
 
 # Main
