@@ -1,6 +1,8 @@
 import asyncio
+import time
 
 async def req(nb):
+    time.sleep(1)
     return {nb: nb for ng in range(nb)}
 
 

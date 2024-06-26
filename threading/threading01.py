@@ -8,5 +8,8 @@ def plugin():
     print('Plugin end')
 
 t = threading.Thread(target=plugin)
+
 t.start()
+#t.join()
 print('Main...')
+t.join()

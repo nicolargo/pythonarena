@@ -19,6 +19,20 @@
 # Delta   : -1 day, 23:59:59.781488 (for status)
 # Delta   : 0:00:01.277902 (for num_threads)
 
+#500 iters with PsUtil version 6.0.0
+#Delta   : 0:00:03.115946 (for cmdline)
+#Delta   : 0:00:02.705392 (for cpu_percent)
+#Delta   : 0:00:00.455487 (for cpu_times)
+#Delta   : 0:00:01.476142 (for memory_info)
+#Delta   : 0:00:00.256081 (for memory_percent)
+#Delta   : 0:00:01.535933 (for name)
+#Delta   : 0:00:00.280973 (for nice)
+#Delta   : 0:00:00.053392 (for pid)
+#Delta   : 0:00:03.002009 (for ppid)
+#Delta   : 0:00:00.132980 (for status)
+#Delta   : 0:00:03.550328 (for username)
+#Delta   : -1 day, 23:59:59.945258 (for status)
+#Delta   : 0:00:00.276642 (for num_threads)
 
 
 import psutil
