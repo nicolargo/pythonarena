@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 
 # import os
-# import sys
-# import glob
 
 from setuptools import setup
 
-data_files = [
-    ('share/doc/skeleton', ['AUTHORS', 'README.md'])
-]
+# import glob
+
+
+data_files = [("share/doc/skeleton", ["AUTHORS", "README.md"])]
+
 
 def get_data_files():
-    data_files = [
-        ('share/doc/skeleton', ['AUTHORS', 'NEWS', 'README.md'])
-    ]
+    data_files = [("share/doc/skeleton", ["AUTHORS", "NEWS", "README.md"])]
 
     # if hasattr(sys, 'real_prefix') or 'bsd' in sys.platform:
     #     conf_path = os.path.join(sys.prefix, 'etc', 'glances')
@@ -34,33 +32,30 @@ def get_data_files():
 def get_requires():
     requires = []
 
-    if sys.version_info < (2, 7):
-        requires += ['argparse']
-
     return requires
 
 
 setup(
-    name='skeleton',
-    version='0.1',
+    name="skeleton",
+    version="0.1",
     description="...",
-    long_description=open('README.md').read(),
-    author='Nicolas Hennion',
-    author_email='nicolas@nicolargo.com',
-    url='https://github.com/nicolargo/skeleton',
-    #download_url='https://s3.amazonaws.com/skeleton/skeleton-0.1.tar.gz',
-    license="LGPL",
+    long_description=open("README.md").read(),
+    author="Nicolas Hennion",
+    author_email="nicolas@nicolargo.com",
+    url="https://github.com/nicolargo/skeleton",
+    # download_url='https://s3.amazonaws.com/skeleton/skeleton-0.1.tar.gz',
+    license="MIT",
     keywords="...",
     install_requires=get_requires(),
-    extras_require={},    
-    packages=['skeleton'],
+    extras_require={},
+    packages=["skeleton"],
     include_package_data=True,
     data_files=get_data_files(),
     # test_suite="skeleton.test",
     entry_points={"console_scripts": ["skeleton=skeleton.skeleton:main"]},
     classifiers=[
-        'Development Status :: 4 - Beta',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
-        'Programming Language :: Python :: 2',
-    ]
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+        "Programming Language :: Python :: 2",
+    ],
 )
