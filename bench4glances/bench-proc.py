@@ -25,8 +25,8 @@ def process_list_homemade():
     """Bench to get process list"""
     pids = [int(x) for x in os.listdir('/proc') if x.isdigit()]
     try:
-        names = [open(os.path.join('/proc', str(pid), 'stat'), 'rb').read().split(' ')[1].replace('(', '').replace(')', '') for pid in pids]
-        cmdlines = [open(os.path.join('/proc', str(pid), 'cmdline'), 'rb').read().split('\x00') for pid in pids]
+        names = [open(os.path.join('/proc', str(pid), 'stat'), 'r').read().split(' ')[1].replace('(', '').replace(')', '') for pid in pids]
+        cmdlines = [open(os.path.join('/proc', str(pid), 'cmdline'), 'r').read().split('\x00') for pid in pids]
     except IOError as e:
         pass
 
@@ -49,4 +49,4 @@ if __name__ == '__main__':
         t0 = time()
         for i in range(0, n):
             globals()[p]()
-        print("\_ {}s".format(str(round(time() - t0, 3))))
+        print("\\_ {}s".format(str(round(time() - t0, 3))))
